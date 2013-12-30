@@ -35,6 +35,15 @@
 			this.CreateBaseSheets();
 			this.DrawObjects();			
 			this.DrawScene(true);
+			
+			var x = setInterval(function() {
+				//obj.move({x:1, y:0, z:0});
+				Game.Objects.Buildings.forEach(function(building) {
+					building.rotate({x:0, y:0, z:1}, Math.PI/2/12);
+				});
+				sheetengine.calc.calculateChangedSheets();
+				sheetengine.drawing.drawScene(true);
+			}, 30);
 		},
 		CreateBaseSheets: function() {
 			for (var x=0; x<Game.Config.MapSize; x++) {
@@ -53,9 +62,12 @@
 			sheetengine.drawing.drawScene(full);
 		},
 		DrawObjects: function() {
+			this.DrawBuildings();
+		},
+		DrawBuildings: function() {
 			Data.Buildings.forEach(function(building) {
 				var southSheet = new sheetengine.Sheet(
-					{ x:Game.Config.BaseSheetSize*building.x, y:Game.Config.BaseSheetSize*(building.y+0.5), z:building.height/2 },
+					{ x:0 , y:Game.Config.BaseSheetSize*(0.5), z:building.height/2 },
 					{ alphaD:0, betaD:0, gammaD:0 },
 					{ w:Game.Config.BaseSheetSize, h:building.height }
 				);
@@ -65,7 +77,7 @@
 				southSheet.context.fillRect(Game.Config.HomePadding, Game.Config.HomePadding, Game.Config.BaseSheetSize-2*Game.Config.HomePadding, building.height-2*Game.Config.HomePadding);
 				
 				var westSheet = new sheetengine.Sheet(
-					{ x:Game.Config.BaseSheetSize*(building.x-0.5), y:Game.Config.BaseSheetSize*(building.y), z:building.height/2 },
+					{ x:Game.Config.BaseSheetSize*(-0.5), y:0, z:building.height/2 },
 					{ alphaD:0, betaD:0, gammaD:90 },
 					{ w:Game.Config.BaseSheetSize, h:building.height }
 				);
@@ -73,7 +85,7 @@
 				westSheet.context.fillRect(0, 0, Game.Config.BaseSheetSize, building.height);
 				
 				var northSheet = new sheetengine.Sheet(
-					{ x:Game.Config.BaseSheetSize*building.x, y:Game.Config.BaseSheetSize*(building.y-0.5), z:building.height/2 },
+					{ x:0, y:Game.Config.BaseSheetSize*(-0.5), z:building.height/2 },
 					{ alphaD:0, betaD:0, gammaD:0 },
 					{ w:Game.Config.BaseSheetSize, h:building.height }
 				);
@@ -81,7 +93,7 @@
 				northSheet.context.fillRect(0, 0, Game.Config.BaseSheetSize, building.height);
 				
 				var eastSheet = new sheetengine.Sheet(
-					{ x:Game.Config.BaseSheetSize*(building.x+0.5), y:Game.Config.BaseSheetSize*(building.y), z:building.height/2 },
+					{ x:Game.Config.BaseSheetSize*(0.5), y:0, z:building.height/2 },
 					{ alphaD:0, betaD:0, gammaD:90 },
 					{ w:Game.Config.BaseSheetSize, h:building.height }
 				);
@@ -91,15 +103,25 @@
 				eastSheet.context.fillRect(Game.Config.HomePadding, building.height-Game.Config.HomePadding, Game.Config.BaseSheetSize-2*Game.Config.HomePadding, Game.Config.HomePadding);
 				
 				var roofSheet = new sheetengine.Sheet(
-					{ x:Game.Config.BaseSheetSize*(building.x), y:Game.Config.BaseSheetSize*(building.y), z:building.height },
+					{ x:0, y:0, z:building.height },
 					{ alphaD:90, betaD:0, gammaD:0 },
 					{ w:Game.Config.BaseSheetSize, h:Game.Config.BaseSheetSize }
 				);
 				roofSheet.context.fillStyle = "#F00";
 				roofSheet.context.fillRect(0, 0, Game.Config.BaseSheetSize, Game.Config.BaseSheetSize);
+				
+				var buildingObject = new sheetengine.SheetObject(
+					{ x:Game.Config.BaseSheetSize*building.x, y:Game.Config.BaseSheetSize*building.y, z:0 },
+					{ alphaD:0, betaD:0, gammaD:0 },
+					[ southSheet, westSheet, northSheet, eastSheet, roofSheet ],
+					{ w:0, h:0, relu:0, relv:0 }
+				);
+				Game.Objects.Buildings.push(buildingObject);
 			});
-			//var obj = new sheetengine.SheetObject({x:0,y:0,z:0}, {alphaD:0,betaD:0,gammaD:0}, [sheet1], {w:Game.Config.BaseSheetSize,h:Game.Config.BaseSheetSize});
 		}
+	},
+	Objects: {
+		Buildings: new Array()
 	}
 };
 
