@@ -31,14 +31,16 @@
 	SheetEngine: {
 		Init: function() {
 			var canvasElement = document.getElementById('maincanvas');
+			
 			sheetengine.scene.init(canvasElement, { w:Game.Config.CanvasWidth, h:Game.Config.CanvasHeight });
 			this.CreateBaseSheets();
 			this.DrawObjects();			
 			this.DrawScene(true);
 			
 			var x = setInterval(function() {
-				//obj.move({x:1, y:0, z:0});
+				var rand = (Math.random()-0.5)*2;
 				Game.Objects.Buildings.forEach(function(building) {
+					building.move({x:rand, y:rand, z:0});
 					building.rotate({x:0, y:0, z:1}, Math.PI/2/12);
 				});
 				sheetengine.calc.calculateChangedSheets();
