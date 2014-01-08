@@ -33,6 +33,7 @@
 			var canvasElement = document.getElementById('maincanvas');
 			
 			sheetengine.scene.init(canvasElement, { w:Game.Config.CanvasWidth, h:Game.Config.CanvasHeight });
+			//sheetengine.drawObjectContour = true;
 			this.CreateBaseSheets();
 			this.DrawObjects();			
 			this.DrawScene(true);
@@ -44,7 +45,7 @@
 					building.rotate({x:0, y:0, z:1}, Math.PI/2/12);
 				});
 				sheetengine.calc.calculateChangedSheets();
-				sheetengine.drawing.drawScene(true);
+				sheetengine.drawing.drawScene();
 			}, 30);
 		},
 		CreateBaseSheets: function() {
@@ -116,7 +117,10 @@
 					{ x:Game.Config.BaseSheetSize*building.x, y:Game.Config.BaseSheetSize*building.y, z:0 },
 					{ alphaD:0, betaD:0, gammaD:0 },
 					[ southSheet, westSheet, northSheet, eastSheet, roofSheet ],
-					{ w:0, h:0, relu:0, relv:0 }
+					{
+						w:Game.Config.BaseSheetSize*2+building.height*0.2, h:Game.Config.BaseSheetSize*Math.SQRT2+building.height,
+						relu:Game.Config.BaseSheetSize, relv:Game.Config.BaseSheetSize*Math.SQRT2/2+building.height
+					}
 				);
 				Game.Objects.Buildings.push(buildingObject);
 			});
