@@ -9,6 +9,6 @@ The players make economy, get power and attack other players (or more peacefully
 	
 To be honest the Game has not been shaped in my mind completely. I (and maybe willing contributers) will shape it and add lots of cool feature while coding.
 
-Live Demo: http://isidat.com/game/game.html
+Live Demo: http://isidat.com/github/Game/game.html
 	
 Anyone can contact me for anything related to this game from: sidati@gmail.com
